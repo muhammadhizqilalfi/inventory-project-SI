@@ -2,7 +2,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-datasource inventra {
+datasource db {
   provider  = "postgresql"
 }
 
@@ -95,8 +95,9 @@ model Product {
 
 model Supplier {
   id             String          @id @default(uuid())
-  name           String
+  name           String          @unique
   contact        String?
+  address        String?
   purchaseOrders PurchaseOrder[]
 }
 
