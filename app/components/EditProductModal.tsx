@@ -54,7 +54,7 @@ export default function EditProductModal({ product, categories }: { product: any
           </div>
 
           <div className="flex gap-2 pt-2">
-            <button type="button" onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-gray-100 rounded-lg">Batal</button>
+            <button type="button" onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-gray-100 text-black rounded-lg">Batal</button>
             <button type="submit" className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-bold">Simpan Perubahan</button>
           </div>
         </form>

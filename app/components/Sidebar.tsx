@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LogOut } from "lucide-react"; // Opsional: jika kamu pakai lucide-react
+import { usePathname, useRouter } from "next/navigation";
 
 const menu = [
   {
@@ -28,8 +27,8 @@ const menu = [
   {
     title: "Logistics",
     items: [
-      { name: "Inbound (PO & QC)", href: "/admin/inbound" },
-      { name: "Outbound (Shipping)", href: "/admin/outbound" },
+      { name: "Inbound", href: "/admin/inbound" },
+      { name: "Outbound", href: "/admin/outbound" },
     ],
   },
   {
@@ -43,14 +42,27 @@ const menu = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
-  const handleLogout = () => {
-    // Tambahkan logika logout kamu di sini (misal hapus session/cookie)
-    if (confirm("Apakah anda yakin ingin keluar?")) {
-      console.log("Logging out...");
-      // window.location.href = "/login"; 
+
+  const handleLogout = async () => {
+  if (confirm("Apakah anda yakin ingin keluar?")) {
+    try {
+      const res = await fetch("/api/logout", {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        router.push("/login");
+        router.refresh();
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
-  };
+  }
+};
 
   return (
     <div className="h-screen w-64 flex flex-col bg-white border-r shrink-0">
@@ -96,7 +108,6 @@ export default function Sidebar() {
           onClick={handleLogout}
           className="flex items-center gap-3 w-full px-3 py-2 rounded-lg justify-center font-bold text-red-600 hover:bg-red-50 transition-colors text-sm"
         >
-          {/* Kamu bisa ganti icon ini dengan SVG atau icon library */}
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             width="18" height="18" 

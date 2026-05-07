@@ -2,7 +2,6 @@ import { prisma } from "@/lib/prisma";
 import TransferForm from "./TransferForm";
 
 export default async function TransferPage() {
-  // Ambil data lokasi dan produk dari database (Server Side)
   const locations = await prisma.storageLocation.findMany({
     include: { warehouse: true }
   });
@@ -13,11 +12,11 @@ export default async function TransferPage() {
     <div className="p-8">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Stock Transfer</h1>
-        <p className="text-sm text-gray-500">Pindahkan barang antar lokasi penyimpanan.</p>
+        <p className="text-sm text-gray-500">Pindahkan barang antar lokasi penyimpanan secara presisi.</p>
       </div>
 
       <div className="max-w-full text-gray-600">
-        <TransferForm locations={locations} products={products} />
+        <TransferForm locations={locations} />
       </div>
     </div>
   );
