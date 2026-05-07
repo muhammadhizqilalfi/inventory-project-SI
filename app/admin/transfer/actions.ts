@@ -26,9 +26,10 @@ export async function createStockTransfer(data: {
       });
 
       for (const item of data.items) {
-        const activeBatchId = item.batchId ?? null;
+        // Normalisasi batchId agar sinkron dengan database (null jika kosong/undefined)
+        const activeBatchId = item.batchId || null;
 
-        // 2. Cari stok di lokasi asal
+        // 2. Cari stok di lokasi asal (menggunakan findFirst agar bisa mencari NULL)
         const sourceInv = await tx.inventory.findFirst({
           where: {
             productId: item.productId,
@@ -37,8 +38,11 @@ export async function createStockTransfer(data: {
           },
         });
 
+        // Validasi Ketersediaan
         if (!sourceInv || sourceInv.quantity < item.quantity) {
-          throw new Error(`Stok tidak cukup di lokasi asal.`);
+          throw new Error(
+            `Stok produk tidak ditemukan atau tidak cukup (Tersedia: ${sourceInv?.quantity || 0}, Diminta: ${item.quantity})`
+          );
         }
 
         // 3. Kurangi stok asal
@@ -47,23 +51,32 @@ export async function createStockTransfer(data: {
           data: { quantity: { decrement: item.quantity } },
         });
 
-        // 4. Tambah/Upsert stok tujuan (Fixing the TS Error)
-        await tx.inventory.upsert({
+        // 4. Update/Tambah stok tujuan (MENGGANTI UPSERT YANG ERROR)
+        const destinationInv = await tx.inventory.findFirst({
           where: {
-            productId_locationId_batchId: {
-              productId: item.productId,
-              locationId: data.toLocationId,
-              batchId: activeBatchId as string, 
-            },
-          },
-          update: { quantity: { increment: item.quantity } },
-          create: {
             productId: item.productId,
             locationId: data.toLocationId,
             batchId: activeBatchId,
-            quantity: item.quantity,
           },
         });
+
+        if (destinationInv) {
+          // Jika produk sudah ada di lokasi tujuan, tambahkan quantity
+          await tx.inventory.update({
+            where: { id: destinationInv.id },
+            data: { quantity: { increment: item.quantity } },
+          });
+        } else {
+          // Jika belum ada, buat record inventory baru
+          await tx.inventory.create({
+            data: {
+              productId: item.productId,
+              locationId: data.toLocationId,
+              batchId: activeBatchId,
+              quantity: item.quantity,
+            },
+          });
+        }
 
         // 5. Riwayat Movement
         await tx.stockMovement.create({
@@ -79,9 +92,35 @@ export async function createStockTransfer(data: {
       }
 
       revalidatePath("/admin/inventory");
-      return { success: true };
+      return { success: true, error: null };
     });
   } catch (error: any) {
-    return { error: error.message };
+    console.error("Transfer Error:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function getProductsByLocation(locationId: string) {
+  try {
+    const inventoryItems = await prisma.inventory.findMany({
+      where: {
+        locationId: locationId,
+        quantity: { gt: 0 },
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    return inventoryItems.map((inv) => ({
+      // Gunakan ID unik dari Inventory sebagai kunci di UI jika perlu
+      productId: inv.productId,
+      name: inv.product.name,
+      availableQty: inv.quantity,
+      batchId: inv.batchId,
+    }));
+  } catch (error) {
+    console.error("Gagal mengambil produk berdasarkan lokasi:", error);
+    return [];
   }
 }
