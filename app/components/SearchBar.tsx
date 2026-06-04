@@ -24,7 +24,7 @@ export default function SearchBar() {
     <input
       type="text"
       placeholder="Cari nama atau barcode..."
-      className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none w-full md:w-80"
+      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-sky-300 focus:ring-4 focus:ring-sky-100 md:w-80"
       onChange={(e) => handleSearch(e.target.value)}
       defaultValue={searchParams.get("search")?.toString()}
     />

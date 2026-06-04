@@ -3,14 +3,15 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import ExportButton from "@/app/components/ExportButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function LocationDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>; // Params adalah Promise di Next.js terbaru
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
 
-  // Ambil data lokasi beserta inventori di dalamnya
   const location = await prisma.storageLocation.findUnique({
     where: { id },
     include: {
@@ -31,92 +32,88 @@ export default async function LocationDetailPage({
   }
 
   return (
-    <div className="w-full p-6">
-      {/* Breadcrumbs */}
-      <nav className="flex text-sm text-gray-500 mb-4 gap-2">
-        <Link href="/admin/warehouses" className="hover:text-blue-600">
+    <div className="w-full space-y-6">
+      <nav className="flex gap-2 text-sm text-slate-500">
+        <Link href="/admin/warehouses" className="hover:text-sky-700">
           Gudang
         </Link>
-        <span>&gt;</span>
-        <span className="text-gray-800 font-medium">
+        <span>/</span>
+        <span className="font-medium text-slate-800">
           {location.warehouse.name}
         </span>
       </nav>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* Header Info */}
-        <div className="p-6 border-b border-gray-100 bg-gray-50/50">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">
-                Detail Lokasi: {location.zone} - {location.rack}
-              </h1>
-              <p className="text-gray-500">
-                Bin / Slot:{" "}
-                <span className="font-mono font-bold text-blue-600">
-                  {location.bin}
-                </span>
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex flex-col gap-5 border-b border-slate-100 bg-slate-50/70 p-6 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <p className="text-sm font-medium text-sky-700">Detail Lokasi</p>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
+              {location.zone} - {location.rack}
+            </h1>
+            <p className="mt-1 text-sm text-slate-500">
+              Bin / Slot:{" "}
+              <span className="font-semibold text-sky-700">{location.bin}</span>
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <ExportButton
+              data={location.inventories}
+              fileName={`Stok_${location.zone}_${location.rack}`}
+              type="inventory"
+              title={`Laporan Stok: ${location.warehouse.name} - ${location.zone}`}
+            />
+
+            <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+              <p className="text-xs font-semibold uppercase text-slate-400">
+                Total Variasi SKU
               </p>
-            </div>
-
-            {/* Perbaikan di sini: Cukup kirim data dan type */}
-            <div className="flex items-center gap-4">
-              <ExportButton
-                data={location.inventories}
-                fileName={`Stok_${location.zone}_${location.rack}`}
-                type="inventory"
-                title={`Laporan Stok: ${location.warehouse.name} - ${location.zone}`}
-              />
-
-              <div className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm text-center">
-                <p className="text-xs text-gray-400 uppercase font-bold">
-                  Total Variasi SKU
-                </p>
-                <p className="text-xl font-bold text-gray-800">
-                  {location.inventories.length}
-                </p>
-              </div>
+              <p className="mt-1 text-2xl font-semibold text-slate-950">
+                {location.inventories.length}
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Tabel Barang di Lokasi Ini */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="w-full min-w-[820px] text-left">
             <thead>
-              <tr className="bg-white border-b text-xs uppercase text-gray-400">
+              <tr className="border-b border-slate-100 bg-white text-xs uppercase text-slate-500">
                 <th className="px-6 py-4 font-semibold">Produk</th>
                 <th className="px-6 py-4 font-semibold">Kategori</th>
                 <th className="px-6 py-4 font-semibold">Batch / Expiry</th>
-                <th className="px-6 py-4 font-semibold text-right">
+                <th className="px-6 py-4 text-right font-semibold">
                   Stok Fisik
                 </th>
-                <th className="px-6 py-4 font-semibold text-right">Reserved</th>
+                <th className="px-6 py-4 text-right font-semibold">Reserved</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-slate-100">
               {location.inventories.map((inv) => (
-                <tr key={inv.id} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={inv.id}
+                  className="transition-colors hover:bg-sky-50/40"
+                >
                   <td className="px-6 py-4">
-                    <p className="text-sm font-bold text-gray-800">
+                    <p className="text-sm font-semibold text-slate-900">
                       {inv.product.name}
                     </p>
-                    <p className="text-[10px] text-gray-400 font-mono">
+                    <p className="text-[11px] text-slate-400">
                       {inv.product.barcode || "No Barcode"}
                     </p>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
+                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
                       {inv.product.category.name}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm">
                     {inv.batch ? (
                       <div>
-                        <p className="font-medium text-gray-700">
+                        <p className="font-medium text-slate-700">
                           {inv.batch.batchNumber}
                         </p>
-                        <p className="text-[10px] text-red-500">
+                        <p className="text-[11px] text-amber-600">
                           Exp:{" "}
                           {inv.batch.expiryDate
                             ? new Date(
@@ -126,22 +123,24 @@ export default async function LocationDetailPage({
                         </p>
                       </div>
                     ) : (
-                      <span className="text-gray-400 text-xs italic">
+                      <span className="text-xs text-slate-400">
                         No Batch Data
                       </span>
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <span
-                      className={`text-sm font-bold ${inv.quantity <= 10 ? "text-red-500" : "text-gray-800"}`}
+                      className={`text-sm font-semibold ${
+                        inv.quantity <= 10 ? "text-red-600" : "text-slate-900"
+                      }`}
                     >
                       {inv.quantity}
                     </span>
-                    <span className="text-[10px] text-gray-400 ml-1 font-normal">
+                    <span className="ml-1 text-[11px] text-slate-400">
                       {inv.product.unit}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right text-sm text-orange-600 font-medium">
+                  <td className="px-6 py-4 text-right text-sm font-medium text-amber-700">
                     {inv.reservedQuantity}
                   </td>
                 </tr>
@@ -150,9 +149,9 @@ export default async function LocationDetailPage({
                 <tr>
                   <td
                     colSpan={5}
-                    className="px-6 py-12 text-center text-gray-400"
+                    className="px-6 py-12 text-center text-slate-400"
                   >
-                    <p>Lokasi ini kosong (tidak ada stok terdaftar).</p>
+                    Lokasi ini kosong (tidak ada stok terdaftar).
                   </td>
                 </tr>
               )}

@@ -21,7 +21,7 @@ export default function CategoryFilter({ categories }: { categories: any[] }) {
     <select 
       onChange={(e) => handleFilter(e.target.value)}
       defaultValue={searchParams.get("category") || ""}
-      className="px-4 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100 md:w-auto"
     >
       <option value="">Semua Kategori</option>
       {categories.map(cat => (

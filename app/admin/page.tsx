@@ -1,5 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import WarehouseSwitcher from "../components/WarehouseSwitcher";
+import {
+  AlertTriangle,
+  Boxes,
+  ClipboardCheck,
+  Clock3,
+  PackageCheck,
+} from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminPage({
   searchParams,
@@ -88,144 +97,177 @@ export default async function AdminPage({
     },
   });
 
+  const stats = [
+    {
+      title: "Low Stock Items",
+      value: lowStockCount,
+      change: "Perlu Reorder",
+      tone: "text-red-600 bg-red-50 border-red-100",
+      icon: AlertTriangle,
+      description: "Stok di bawah batas minimum",
+    },
+    {
+      title: "Pending QC",
+      value: pendingQCCount,
+      change: "Butuh Inspeksi",
+      tone: "text-violet-700 bg-violet-50 border-violet-100",
+      icon: ClipboardCheck,
+      description: "Barang di area karantina",
+    },
+    {
+      title: "Reserved Stock",
+      value: totalReserved.toLocaleString(),
+      change: "Pending Outbound",
+      tone: "text-amber-700 bg-amber-50 border-amber-100",
+      icon: PackageCheck,
+      description: "Barang sudah dipesan pelanggan",
+    },
+    {
+      title: "Near Expiration",
+      value: nearExpiryCount,
+      change: "< 30 Hari",
+      tone: "text-yellow-700 bg-yellow-50 border-yellow-100",
+      icon: Clock3,
+      description: "Batch mendekati kadaluarsa",
+    },
+    {
+      title: "Total Products",
+      value: totalProducts.toLocaleString(),
+      change: "Global Catalog",
+      tone: "text-sky-700 bg-sky-50 border-sky-100",
+      icon: Boxes,
+      description: "Variasi SKU aktif",
+    },
+  ];
+
   return (
-    <div className="w-full">
-      {/* Header dengan Switcher */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-        <h1 className="text-2xl font-semibold text-gray-700">
-          Dashboard Overview
-        </h1>
+    <div className="w-full space-y-6">
+      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-sm font-medium text-sky-700">Dashboard</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
+            Inventory Overview
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Ringkasan kondisi stok, QC, dan pergerakan gudang terbaru.
+          </p>
+        </div>
         <WarehouseSwitcher warehouses={warehouses} />
       </div>
 
-      {/* Cards */}
-      <div className="grid w-full grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        {[
-          {
-            title: "Low Stock Items",
-            value: lowStockCount,
-            change: "Perlu Reorder",
-            color: "text-red-500",
-            description: "Stok di bawah batas minimum",
-          },
-          {
-            title: "Pending QC",
-            value: pendingQCCount,
-            change: "Butuh Inspeksi",
-            color: "text-purple-600",
-            description: "Barang di area karantina",
-          },
-          {
-            title: "Reserved Stock",
-            value: totalReserved.toLocaleString(),
-            change: "Pending Outbound",
-            color: "text-orange-500",
-            description: "Barang sudah dipesan pelanggan",
-          },
-          {
-            title: "Near Expiration",
-            value: nearExpiryCount,
-            change: "< 30 Hari",
-            color: "text-yellow-600",
-            description: "Batch mendekati kadaluarsa",
-          },
-          {
-            title: "Total Products",
-            value: totalProducts.toLocaleString(),
-            change: "Global Catalog",
-            color: "text-blue-500",
-            description: "Variasi SKU aktif",
-          },
-        ].map((item, i) => (
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        {stats.map((item) => {
+          const Icon = item.icon;
+          return (
           <div
-            key={i}
-            className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between"
+            key={item.title}
+            className="flex min-h-36 flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-sky-100 hover:shadow-md"
           >
-            <div>
-              <p className="text-sm text-gray-500 mb-1 font-medium">
-                {item.title}
-              </p>
-              <h2 className="text-3xl font-bold text-gray-800">{item.value}</h2>
-            </div>
-            <div className="mt-3">
-              <div
-                className={`text-xs font-bold ${item.color} flex items-center gap-1`}
-              >
-                <span>{item.change}</span>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-slate-500">
+                  {item.title}
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
+                  {item.value}
+                </h2>
               </div>
-              <p className="text-[10px] text-gray-400 mt-1">
-                {item.description}
+              <div
+                className={`flex h-10 w-10 items-center justify-center rounded-xl border ${item.tone}`}
+              >
+                <Icon size={18} />
+              </div>
+            </div>
+            <div className="mt-4">
+              <p className="text-xs font-semibold text-slate-700">
+                {item.change}
               </p>
+              <p className="mt-1 text-xs text-slate-500">{item.description}</p>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
-      <div className="grid w-full grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart Visual */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h2 className="text-gray-700 font-semibold mb-6">
-            Inbound vs Outbound Trends
-          </h2>
-          <div className="h-64 flex items-end justify-around gap-2 px-4">
+      <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-semibold text-slate-900">
+                Inbound vs Outbound Trends
+              </h2>
+              <p className="text-sm text-slate-500">
+                Visual ringkas pergerakan barang dalam beberapa hari terakhir.
+              </p>
+            </div>
+            <div className="flex items-center gap-4 text-xs text-slate-500">
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-sky-500" />
+                Inbound
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-slate-300" />
+                Outbound
+              </span>
+            </div>
+          </div>
+          <div className="flex h-72 items-end justify-around gap-2 rounded-2xl border border-slate-100 bg-slate-50/70 px-4 pb-4 pt-8">
             {[40, 60, 80, 50, 90, 30, 45].map((val, i) => (
               <div key={i} className="flex flex-col items-center gap-2 w-full">
                 <div className="flex gap-1 items-end w-full justify-center">
                   <div
-                    className="w-4 bg-blue-500 rounded-t-sm transition-all hover:bg-blue-600"
+                    className="w-4 rounded-t-md bg-sky-500 transition hover:bg-sky-600"
                     style={{ height: `${val}%` }}
                   />
                   <div
-                    className="w-4 bg-gray-200 rounded-t-sm transition-all hover:bg-gray-300"
+                    className="w-4 rounded-t-md bg-slate-300 transition hover:bg-slate-400"
                     style={{ height: `${val - 20}%` }}
                   />
                 </div>
-                <span className="text-[10px] text-gray-400">Day {i + 1}</span>
+                <span className="text-[11px] text-slate-400">Day {i + 1}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Live Movements */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-gray-700 font-semibold">Live Movements</h2>
-            <button className="text-xs font-bold text-blue-600 hover:text-blue-700">
-              View All
-            </button>
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <div>
+              <h2 className="font-semibold text-slate-900">Recent Movement</h2>
+              <p className="text-sm text-slate-500">5 transaksi terbaru</p>
+            </div>
           </div>
 
           <div className="space-y-4">
             {recentTransactions.map((tx) => (
               <div
                 key={tx.id}
-                className="flex flex-col border-b border-gray-50 pb-3 last:border-none"
+                className="rounded-2xl border border-slate-100 bg-slate-50/60 p-4"
               >
-                <div className="flex justify-between items-start">
-                  <p className="text-sm font-semibold text-gray-800 truncate max-w-37.5">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="max-w-[150px] truncate text-sm font-semibold text-slate-800">
                     {tx.product?.name}
                   </p>
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                    className={`rounded-full px-2 py-1 text-[11px] font-semibold ${
                       tx.type === "IN"
-                        ? "bg-green-50 text-green-600"
-                        : "bg-blue-50 text-blue-600"
+                        ? "bg-emerald-50 text-emerald-700"
+                        : "bg-sky-50 text-sky-700"
                     }`}
                   >
                     {tx.type}
                   </span>
                 </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <div className="mt-2 flex justify-between text-xs text-slate-500">
                   <span>Qty: {tx.quantity}</span>
-                  <span className="italic">
-                    {/* PERBAIKAN: Menggunakan tx.date, bukan tx.createdAt */}
+                  <span>
                     {tx.date ? new Date(tx.date).toLocaleDateString() : "-"}
                   </span>
                 </div>
               </div>
             ))}
             {recentTransactions.length === 0 && (
-              <p className="text-sm text-gray-400 text-center py-10">
+              <p className="rounded-2xl border border-dashed border-slate-200 py-12 text-center text-sm text-slate-400">
                 Tidak ada transaksi baru
               </p>
             )}

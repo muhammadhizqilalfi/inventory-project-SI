@@ -1,6 +1,7 @@
 "use client";
+
 import { useState } from "react";
-import { addProduct } from "@/app/admin/products/actions"; // Import action yang kita buat tadi
+import { addProduct } from "@/app/admin/products/actions";
 
 export default function AddProductModal({ categories }: { categories: any[] }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,79 +12,122 @@ export default function AddProductModal({ categories }: { categories: any[] }) {
     const formData = new FormData(e.currentTarget);
     await addProduct(formData);
     setLoading(false);
-    setIsOpen(false); // Tutup modal setelah sukses
+    setIsOpen(false);
   };
 
-  if (!isOpen) return (
-    <button 
-      onClick={() => setIsOpen(true)}
-      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
-    >
-      + Tambah Produk
-    </button>
-  );
+  if (!isOpen) {
+    return (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700"
+      >
+        + Tambah Produk
+      </button>
+    );
+  }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-          <h2 className="text-xl font-bold text-gray-800">Produk Baru</h2>
-          <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-gray-600">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-lg overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+          <div>
+            <h2 className="text-xl font-semibold text-slate-950">
+              Produk Baru
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Tambahkan SKU ke katalog Inventra.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="rounded-lg px-2 py-1 text-xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          >
+            x
           </button>
         </div>
 
-        {/* Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 p-6">
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Produk</label>
-            <input name="name" required className="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" placeholder="Masukkan nama barang..." />
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Nama Produk
+            </label>
+            <input
+              name="name"
+              required
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+              placeholder="Masukkan nama barang"
+            />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Kategori</label>
-              <select name="categoryId" required className="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50">
-                <option value="">Pilih...</option>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Kategori
+              </label>
+              <select
+                name="categoryId"
+                required
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+              >
+                <option value="">Pilih kategori</option>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Satuan</label>
-              <input name="unit" required className="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" placeholder="Pcs/Box" defaultValue="Pcs" />
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Satuan
+              </label>
+              <input
+                name="unit"
+                required
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+                placeholder="Pcs/Box"
+                defaultValue="Pcs"
+              />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Barcode</label>
-            <input name="barcode" className="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" placeholder="Opsional" />
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Barcode
+            </label>
+            <input
+              name="barcode"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+              placeholder="Opsional"
+            />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Min. Stock Alert</label>
-            <input name="minStock" type="number" className="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50" defaultValue={0} />
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Min. Stock Alert
+            </label>
+            <input
+              name="minStock"
+              type="number"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+              defaultValue={0}
+            />
           </div>
 
-          {/* Footer / Action */}
-          <div className="pt-4 flex gap-3">
-            <button 
-              type="button" 
+          <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row">
+            <button
+              type="button"
               onClick={() => setIsOpen(false)}
-              className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 font-medium"
+              className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
             >
               Batal
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold disabled:opacity-50"
+              className="flex-1 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-50"
             >
-              {loading ? "Menyimpan" : "Simpan Produk"}
+              {loading ? "Menyimpan..." : "Simpan Produk"}
             </button>
           </div>
         </form>
