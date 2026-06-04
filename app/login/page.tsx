@@ -11,6 +11,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const fallbackLoginError =
+    "Login gagal. Periksa email dan password atau koneksi database.";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,18 +29,30 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get("content-type") || "";
+      let data: { error?: string } | null = null;
+
+      if (contentType.includes("application/json")) {
+        try {
+          data = await res.json();
+        } catch {
+          data = null;
+        }
+      }
 
       if (!res.ok) {
-        throw new Error(
-          data.error || "Login gagal, periksa kembali email & password",
-        );
+        throw new Error(data?.error || fallbackLoginError);
       }
 
       router.push("/redirect");
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : fallbackLoginError;
+      setError(
+        message.includes("Unexpected end of JSON input")
+          ? fallbackLoginError
+          : message,
+      );
     } finally {
       setIsLoading(false);
     }
