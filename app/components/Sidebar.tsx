@@ -21,7 +21,6 @@ const menu = [
     items: [
       { name: "Stock On Hand", href: "/admin/inventory" },
       { name: "Stock Transfer", href: "/admin/transfer" },
-      { name: "Stock Opname", href: "/admin/opname" },
     ],
   },
   {
@@ -32,9 +31,8 @@ const menu = [
     ],
   },
   {
-    title: "Reports & System",
+    title: "System",
     items: [
-      { name: "Stock Movement", href: "/admin/reports/movement" },
       { name: "User Management", href: "/admin/users" },
     ],
   },
