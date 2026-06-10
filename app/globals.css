@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -11,5 +15,28 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  letter-spacing: 0;
+}
+
+input,
+select,
+textarea {
+  color: #0f172a;
+}
+
+::selection {
+  background: #bae6fd;
+  color: #0f172a;
 }

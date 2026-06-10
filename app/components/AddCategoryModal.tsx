@@ -1,6 +1,7 @@
 "use client";
+
 import { useState } from "react";
-import { addCategory } from "@/app/admin/products/category-action"; // Import action untuk tambah kategori
+import { addCategory } from "@/app/admin/products/category-action";
 
 export default function AddCategoryModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,49 +15,65 @@ export default function AddCategoryModal() {
     setIsOpen(false);
   };
 
-  if (!isOpen) return (
-    <button 
-      onClick={() => setIsOpen(true)}
-      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all"
-    >
-      + Kategori
-    </button>
-  );
+  if (!isOpen) {
+    return (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+      >
+        + Kategori
+      </button>
+    );
+  }
 
   return (
-    <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-          <h2 className="text-lg font-bold text-gray-800">Tambah Kategori</h2>
-          <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-sm overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-950">
+              Tambah Kategori
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Kelompokkan barang agar katalog mudah dipindai.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="rounded-lg px-2 py-1 text-xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          >
+            x
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 p-6">
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Kategori</label>
-            <input 
-              name="name" 
-              required 
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Nama Kategori
+            </label>
+            <input
+              name="name"
+              required
               autoFocus
-              className="w-full p-2.5 border text-gray-600 border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" 
-              placeholder="Contoh: Elektronik, Makanan, dll" 
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+              placeholder="Contoh: Elektronik"
             />
           </div>
 
-          <div className="flex gap-2">
-            <button 
-              type="button" 
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
               onClick={() => setIsOpen(false)}
-              className="flex-1 px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 text-sm font-medium"
+              className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
             >
               Batal
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-bold disabled:opacity-50"
+              className="flex-1 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-50"
             >
-              {loading ? "Menyimpan" : "Simpan"}
+              {loading ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </form>

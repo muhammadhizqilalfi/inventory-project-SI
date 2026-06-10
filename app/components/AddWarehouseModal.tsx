@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { createWarehouse } from "@/app/admin/warehouses/actions";
 
@@ -12,7 +13,7 @@ export default function AddWarehouseButton() {
     setLoading(false);
 
     if (result.success) {
-      setIsOpen(false); // Tutup modal jika berhasil
+      setIsOpen(false);
     } else {
       alert(result.error);
     }
@@ -20,53 +21,63 @@ export default function AddWarehouseButton() {
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        className="rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700"
       >
         + Tambah Gudang
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl w-96 shadow-xl border border-gray-200">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Tambah Gudang Baru</h2>
-            
-            {/* Gunakan form action */}
-            <form action={handleSubmit} className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+            <div className="border-b border-slate-100 px-6 py-5">
+              <h2 className="text-xl font-semibold text-slate-950">
+                Tambah Gudang
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Daftarkan lokasi operasional penyimpanan baru.
+              </p>
+            </div>
+
+            <form action={handleSubmit} className="space-y-4 p-6">
               <div>
-                <label className="text-sm font-medium text-gray-700">Nama Gudang</label>
-                <input 
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Nama Gudang
+                </label>
+                <input
                   name="name"
-                  type="text" 
+                  type="text"
                   required
-                  placeholder="Contoh: Gudang Utama Jakarta" 
-                  className="w-full border p-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 outline-none" 
+                  placeholder="Contoh: Gudang Utama Jakarta"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Lokasi Kota</label>
-                <input 
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Lokasi Kota
+                </label>
+                <input
                   name="location"
-                  type="text" 
+                  type="text"
                   required
-                  placeholder="Contoh: Jakarta Timur" 
-                  className="w-full border p-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-500 outline-none" 
+                  placeholder="Contoh: Jakarta Timur"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 mt-6">
-                <button 
+              <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row">
+                <button
                   type="button"
-                  onClick={() => setIsOpen(false)} 
-                  className="px-4 py-2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setIsOpen(false)}
+                  className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
                 >
                   Batal
                 </button>
-                <button 
+                <button
                   type="submit"
                   disabled={loading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
+                  className="flex-1 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-50"
                 >
                   {loading ? "Menyimpan..." : "Simpan Gudang"}
                 </button>

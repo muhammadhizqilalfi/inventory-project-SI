@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import POForm from "@/app/components/POForm";
 import ReceiptModal from "@/app/components/ReceiptModal";
 
+export const dynamic = "force-dynamic";
+
 export default async function InboundPage() {
   const suppliers = await prisma.supplier.findMany();
   const products = await prisma.product.findMany();
@@ -20,48 +22,61 @@ export default async function InboundPage() {
   });
 
   return (
-    <div className="p-6 space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-black">Inbound Management</h1>
+    <div className="space-y-6">
+      <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p className="text-sm font-medium text-sky-700">Logistics</p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
+          Inbound Management
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          Buat purchase order dan proses penerimaan barang ke lokasi simpan.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <div className="lg:col-span-1">
           <POForm suppliers={suppliers} products={products} />
         </div>
 
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border p-6">
-          <h2 className="font-semibold mb-4 text-gray-700">Daftar Purchase Order</h2>
-          <table className="w-full text-sm text-left">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm xl:col-span-2">
+          <div className="border-b border-slate-100 px-6 py-5">
+            <h2 className="font-semibold text-slate-900">Daftar Purchase Order</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              PO terbaru beserta status penerimaan barang.
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[680px] text-left text-sm">
+            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="p-3">ID PO</th>
-                <th className="p-3">Supplier</th>
-                <th className="p-3">Item</th>
-                <th className="p-3">Status</th>
-                <th className="p-3 text-right">Aksi</th>
+                <th className="px-6 py-4 font-semibold">ID PO</th>
+                <th className="px-6 py-4 font-semibold">Supplier</th>
+                <th className="px-6 py-4 font-semibold">Item</th>
+                <th className="px-6 py-4 font-semibold">Status</th>
+                <th className="px-6 py-4 text-right font-semibold">Aksi</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100">
               {poList.map((po) => (
-                <tr key={po.id} className="border-b text-gray-600">
-                  <td className="p-3 font-mono text-xs">{po.id.substring(0, 8)}</td>
-                  <td className="p-3 font-medium">{po.supplier.name}</td>
-                  <td className="p-3">{po._count.items} Items</td>
-                  <td className="p-3">
+                <tr key={po.id} className="text-slate-600 transition-colors hover:bg-sky-50/40">
+                  <td className="px-6 py-4 text-xs font-medium">{po.id.substring(0, 8)}</td>
+                  <td className="px-6 py-4 font-medium text-slate-800">{po.supplier.name}</td>
+                  <td className="px-6 py-4">{po._count.items} Items</td>
+                  <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${
-                      po.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'
+                      po.status === 'PENDING' ? 'bg-amber-50 text-amber-700 ring-1 ring-amber-100' : 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100'
                     }`}>
                       {po.status}
                     </span>
                   </td>
-                  <td className="p-3 text-right">
+                  <td className="px-6 py-4 text-right">
                     <ReceiptModal po={po} locations={locations} />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,15 @@
 "use client";
+
 import { useState } from "react";
 import { createLocation } from "@/app/admin/warehouses/actions";
 
-export default function AddRackButton({ warehouseId, warehouseName }: { warehouseId: string, warehouseName: string }) {
+export default function AddRackButton({
+  warehouseId,
+  warehouseName,
+}: {
+  warehouseId: string;
+  warehouseName: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   async function handleSubmit(formData: FormData) {
@@ -13,42 +20,82 @@ export default function AddRackButton({ warehouseId, warehouseName }: { warehous
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
-        className="text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors"
+        className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-sky-700"
       >
         + Tambah Lokasi Rak
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-6 rounded-xl w-full max-w-md shadow-xl text-left">
-            <h2 className="text-xl font-bold text-gray-800">Tambah Lokasi Rak</h2>
-            <p className="text-sm text-gray-500 mb-4">Gudang: {warehouseName}</p>
-            
-            <form action={handleSubmit} className="space-y-4">
-              {/* Hidden input untuk melempar ID gudang */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white text-left shadow-2xl">
+            <div className="border-b border-slate-100 px-6 py-5">
+              <h2 className="text-xl font-semibold text-slate-950">
+                Tambah Lokasi Rak
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Gudang: {warehouseName}
+              </p>
+            </div>
+
+            <form action={handleSubmit} className="space-y-4 p-6">
               <input type="hidden" name="warehouseId" value={warehouseId} />
-              
+
               <div>
-                <label className="text-xs font-bold text-gray-400 uppercase">Zona (Contoh: Cold Storage / Zone A)</label>
-                <input name="zone" type="text" required className="w-full border p-2 rounded-lg mt-1" />
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Zona
+                </label>
+                <input
+                  name="zone"
+                  type="text"
+                  required
+                  placeholder="Contoh: Cold Storage / Zone A"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+                />
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="text-xs font-bold text-gray-400 uppercase">Rak (Contoh: R-01)</label>
-                  <input name="rack" type="text" required className="w-full border p-2 rounded-lg mt-1" />
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Rak
+                  </label>
+                  <input
+                    name="rack"
+                    type="text"
+                    required
+                    placeholder="R-01"
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+                  />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 uppercase">Bin / Slot (Contoh: B-10)</label>
-                  <input name="bin" type="text" required className="w-full border p-2 rounded-lg mt-1" />
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Bin / Slot
+                  </label>
+                  <input
+                    name="bin"
+                    type="text"
+                    required
+                    placeholder="B-10"
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+                  />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 mt-6">
-                <button type="button" onClick={() => setIsOpen(false)} className="px-4 py-2 text-gray-500">Batal</button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan Lokasi</button>
+              <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-700"
+                >
+                  Simpan Lokasi
+                </button>
               </div>
             </form>
           </div>

@@ -4,7 +4,13 @@ import { useState } from "react";
 import { deleteProduct } from "@/app/admin/products/actions";
 import EditProductModal from "./EditProductModal";
 
-export default function ProductActions({ product, categories }: { product: any, categories: any[] }) {
+export default function ProductActions({
+  product,
+  categories,
+}: {
+  product: any;
+  categories: any[];
+}) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -13,56 +19,59 @@ export default function ProductActions({ product, categories }: { product: any, 
     try {
       await deleteProduct(product.id);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Error deleting product';
-      alert(message); // Bisa diganti dengan toast notification nanti
+      const message =
+        error instanceof Error ? error.message : "Error deleting product";
+      alert(message);
     }
     setIsDeleting(false);
     setShowDeleteModal(false);
   };
 
   return (
-    <div className="flex justify-end gap-3">
+    <div className="flex justify-end gap-2">
       <EditProductModal product={product} categories={categories} />
-      
-      {/* Tombol Pemicu Modal Hapus */}
-      <button 
+
+      <button
         onClick={() => setShowDeleteModal(true)}
-        className="text-red-500 hover:text-red-700 font-medium transition-colors"
+        className="rounded-lg px-2 py-1 text-xs font-semibold text-red-600 transition hover:bg-red-50"
       >
         Hapus
       </button>
 
       {showDeleteModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
             <div className="p-6 text-center">
-              {/* Icon Peringatan */}
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 15.632c-.77 1.333.192 3 1.732 3z" />
-                </svg>
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-100 bg-red-50 text-red-600">
+                !
               </div>
-              
-              <h3 className="text-lg font-bold text-gray-900">Konfirmasi Hapus</h3>
-              <p className="text-sm text-gray-500 mt-2">
-                Apakah Anda yakin ingin menghapus <span className="font-semibold text-gray-800">{product.name}</span>? Tindakan ini tidak dapat dibatalkan.
+
+              <h3 className="text-lg font-semibold text-slate-950">
+                Konfirmasi Hapus
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                Hapus{" "}
+                <span className="font-semibold text-slate-800">
+                  {product.name}
+                </span>
+                ? Tindakan ini tidak dapat dibatalkan.
               </p>
             </div>
 
-            <div className="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row-reverse gap-2">
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="w-full sm:flex-1 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
-              >
-                {isDeleting ? "Menghapus..." : "Ya, Hapus Produk"}
-              </button>
+            <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50 px-6 py-4 sm:flex-row">
               <button
                 onClick={() => setShowDeleteModal(false)}
                 disabled={isDeleting}
-                className="w-full sm:flex-1 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
+                className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
                 Batal
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="flex-1 rounded-xl bg-red-600 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
+              >
+                {isDeleting ? "Menghapus..." : "Hapus Produk"}
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { createPO } from "@/app/admin/inbound/actions";
 
@@ -16,58 +17,80 @@ export default function POForm({ suppliers, products }: any) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl border space-y-4 shadow-sm">
-      <h2 className="font-bold text-gray-700 border-b pb-2">Manual PO Input</h2>
-      
-      <div>
-        <label className="text-xs font-bold text-gray-500 uppercase">Supplier</label>
-        <select 
-          className="w-full p-2 bg-gray-50 text-gray-600 rounded border-none focus:ring-2 focus:ring-[#D32F2F]"
-          onChange={(e) => setSupplierId(e.target.value)}
-          required
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+    >
+      <div className="border-b border-slate-100 pb-4">
+        <h2 className="font-semibold text-slate-900">Manual PO Input</h2>
+        <p className="mt-1 text-sm text-slate-500">
+          Pilih supplier dan barang yang akan dipesan.
+        </p>
+      </div>
+
+      <div className="mt-5 space-y-5">
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-700">
+            Supplier
+          </label>
+          <select
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+            onChange={(e) => setSupplierId(e.target.value)}
+            required
+          >
+            <option value="">Pilih Supplier</option>
+            {suppliers.map((s: any) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="space-y-3">
+          <label className="block text-sm font-medium text-slate-700">
+            Products
+          </label>
+          {items.map((item, idx) => (
+            <div key={idx} className="grid grid-cols-[1fr_88px] gap-2">
+              <select
+                className="min-w-0 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+                onChange={(e) => {
+                  const n = [...items];
+                  n[idx].productId = e.target.value;
+                  setItems(n);
+                }}
+                required
+              >
+                <option value="">Pilih Produk</option>
+                {products.map((p: any) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="number"
+                className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+                placeholder="Qty"
+                onChange={(e) => {
+                  const n = [...items];
+                  n[idx].quantity = parseInt(e.target.value);
+                  setItems(n);
+                }}
+                required
+              />
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full rounded-xl bg-sky-600 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700"
         >
-          <option value="">Pilih Supplier</option>
-          {suppliers.map((s: any) => <option key={s.id} value={s.id}>{s.name}</option>)}
-        </select>
+          Simpan Purchase Order
+        </button>
       </div>
-
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-gray-500 uppercase">Products</label>
-        {items.map((item, idx) => (
-          <div key={idx} className="flex gap-2">
-            <select 
-              className="flex-1 p-2 bg-gray-50 text-gray-600 rounded text-sm border-none"
-              onChange={(e) => {
-                const n = [...items];
-                n[idx].productId = e.target.value;
-                setItems(n);
-              }}
-              required
-            >
-              <option value="">Pilih Produk</option>
-              {products.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
-            <input 
-              type="number" 
-              className="w-20 p-2 bg-gray-50 text-gray-500 rounded text-sm border-none"
-              placeholder="Qty"
-              onChange={(e) => {
-                const n = [...items];
-                n[idx].quantity = parseInt(e.target.value);
-                setItems(n);
-              }}
-              required
-            />
-          </div>
-        ))}
-      </div>
-
-      <button 
-        type="submit" 
-        className="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700 transition"
-      >
-        Simpan Purchase Order
-      </button>
     </form>
   );
 }
