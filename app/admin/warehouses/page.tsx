@@ -3,6 +3,8 @@ import Link from "next/link";
 import AddWarehouseButton from "@/app/components/AddWarehouseModal";
 import AddRackButton from "@/app/components/AddRackModal";
 
+export const dynamic = "force-dynamic";
+
 export default async function WarehousePage() {
   // Mengambil data gudang beserta jumlah lokasi rak di dalamnya
   const warehouses = await prisma.warehouse.findMany({
@@ -23,11 +25,14 @@ export default async function WarehousePage() {
   
 
   return (
-    <div className="w-full p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="w-full space-y-6">
+      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Manajemen Gudang</h1>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm font-medium text-sky-700">Master Data</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
+            Manajemen Gudang
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
             Kelola hierarki gudang, zona, dan rak penyimpanan.
           </p>
         </div>
@@ -38,31 +43,29 @@ export default async function WarehousePage() {
         {warehouses.map((warehouse) => (
           <div
             key={warehouse.id}
-            className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+            className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
           >
-            {/* Warehouse Header */}
-            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <div className="flex flex-col gap-4 border-b border-slate-100 bg-slate-50/70 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-lg font-bold text-gray-800">
+                <h2 className="text-lg font-semibold text-slate-950">
                   {warehouse.name}
                 </h2>
-                <p className="text-sm text-gray-500">{warehouse.location}</p>
+                <p className="text-sm text-slate-500">{warehouse.location}</p>
               </div>
-              <div className="flex gap-4 text-sm">
-                <div className="text-center">
-                  <span className="block font-bold text-gray-700">
+              <div className="flex gap-4 text-sm sm:text-right">
+                <div>
+                  <span className="block text-2xl font-semibold text-slate-950">
                     {warehouse._count.locations}
                   </span>
-                  <span className="text-gray-500">Total Titik Lokasi</span>
+                  <span className="text-slate-500">Total Titik Lokasi</span>
                 </div>
               </div>
             </div>
 
-            {/* Storage Locations Table (The Hierarchy) */}
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full min-w-[760px] border-collapse text-left">
                 <thead>
-                  <tr className="text-xs uppercase text-gray-400 bg-white border-b">
+                  <tr className="border-b border-slate-100 bg-white text-xs uppercase text-slate-500">
                     <th className="px-6 py-3 font-semibold">Zona</th>
                     <th className="px-6 py-3 font-semibold">Rak</th>
                     <th className="px-6 py-3 font-semibold">Bin / Slot</th>
@@ -72,34 +75,34 @@ export default async function WarehousePage() {
                     <th className="px-6 py-3 font-semibold text-right">Aksi</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-slate-100">
                   {warehouse.locations.map((loc) => {
                     const totalQty = loc.inventories.reduce((sum, inv) => sum + (inv.quantity || 0), 0);
                     return (
                       <tr
                         key={loc.id}
-                        className="hover:bg-blue-50 transition-colors group"
+                        className="transition-colors hover:bg-sky-50/40"
                       >
                         <td className="px-6 py-4">
-                          <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold uppercase">
+                          <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold uppercase text-sky-700 ring-1 ring-sky-100">
                             {loc.zone || "N/A"}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm font-medium text-gray-700">
+                        <td className="px-6 py-4 text-sm font-medium text-slate-700">
                           {loc.rack || "-"}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
+                        <td className="px-6 py-4 text-sm text-slate-600">
                           {loc.bin || "-"}
                         </td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex flex-col">
-                            <span className="text-sm font-bold text-gray-800">
+                            <span className="text-sm font-semibold text-slate-900">
                               {totalQty}{" "}
-                              <span className="text-[10px] text-gray-400 font-normal underline">
+                              <span className="text-[10px] font-normal text-slate-400">
                                 PCS
                               </span>
                             </span>
-                            <span className="text-[10px] text-gray-500">
+                            <span className="text-[10px] text-slate-500">
                               {loc._count.inventories} SKU
                             </span>
                           </div>
@@ -107,7 +110,7 @@ export default async function WarehousePage() {
                         <td className="px-6 py-4 text-right">
                           <Link
                             href={`/admin/warehouses/location/${loc.id}`}
-                            className="text-blue-600 hover:underline text-xs font-bold"
+                            className="rounded-lg px-2 py-1 text-xs font-semibold text-sky-700 transition hover:bg-sky-50"
                           >
                             Detail Stok
                           </Link>
@@ -119,7 +122,7 @@ export default async function WarehousePage() {
                     <tr>
                       <td
                         colSpan={5}
-                        className="px-6 py-8 text-center text-gray-400 text-sm"
+                        className="px-6 py-10 text-center text-sm text-slate-400"
                       >
                         Belum ada lokasi rak yang terdaftar di gudang ini.
                       </td>
@@ -129,7 +132,7 @@ export default async function WarehousePage() {
               </table>
             </div>
 
-            <div className="p-4 bg-gray-50 border-t border-gray-100 text-right">
+            <div className="border-t border-slate-100 bg-slate-50 px-6 py-4 text-right">
               <AddRackButton
                 warehouseId={warehouse.id}
                 warehouseName={warehouse.name}

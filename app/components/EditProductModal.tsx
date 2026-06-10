@@ -1,8 +1,15 @@
 "use client";
+
 import { useState } from "react";
 import { updateProduct } from "@/app/admin/products/actions";
 
-export default function EditProductModal({ product, categories }: { product: any, categories: any[] }) {
+export default function EditProductModal({
+  product,
+  categories,
+}: {
+  product: any;
+  categories: any[];
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   async function handleEdit(formData: FormData) {
@@ -10,52 +17,116 @@ export default function EditProductModal({ product, categories }: { product: any
     setIsOpen(false);
   }
 
-  if (!isOpen) return (
-    <button onClick={() => setIsOpen(true)} className="text-blue-600 hover:text-blue-800 font-medium">
-      Edit
-    </button>
-  );
+  if (!isOpen) {
+    return (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="rounded-lg px-2 py-1 text-xs font-semibold text-sky-700 transition hover:bg-sky-50"
+      >
+        Edit
+      </button>
+    );
+  }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200">
-        <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
-          <h2 className="font-bold text-gray-800">Edit Produk</h2>
-          <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-lg overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+          <div>
+            <h2 className="text-xl font-semibold text-slate-950">
+              Edit Produk
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Perbarui informasi katalog barang.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="rounded-lg px-2 py-1 text-xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          >
+            x
+          </button>
         </div>
 
-        <form action={handleEdit} className="p-6 space-y-4 text-left">
+        <form action={handleEdit} className="space-y-4 p-6 text-left">
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Produk</label>
-            <input name="name" defaultValue={product.name} required className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Nama Produk
+            </label>
+            <input
+              name="name"
+              defaultValue={product.name}
+              required
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+            />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Kategori</label>
-              <select name="categoryId" defaultValue={product.categoryId} className="w-full p-2 border rounded-lg outline-none">
-                {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Kategori
+              </label>
+              <select
+                name="categoryId"
+                defaultValue={product.categoryId}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+              >
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Unit</label>
-              <input name="unit" defaultValue={product.unit} className="w-full p-2 border rounded-lg outline-none" />
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Unit
+              </label>
+              <input
+                name="unit"
+                defaultValue={product.unit}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+              />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Barcode</label>
-            <input name="barcode" defaultValue={product.barcode || ""} className="w-full p-2 border rounded-lg outline-none" />
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Barcode
+            </label>
+            <input
+              name="barcode"
+              defaultValue={product.barcode || ""}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+            />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Min. Stock Alert</label>
-            <input name="minStock" type="number" defaultValue={product.minStock} className="w-full p-2 border rounded-lg outline-none" />
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Min. Stock Alert
+            </label>
+            <input
+              name="minStock"
+              type="number"
+              defaultValue={product.minStock}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+            />
           </div>
 
-          <div className="flex gap-2 pt-2">
-            <button type="button" onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-gray-100 text-black rounded-lg">Batal</button>
-            <button type="submit" className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-bold">Simpan Perubahan</button>
+          <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              className="flex-1 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-700"
+            >
+              Simpan Perubahan
+            </button>
           </div>
         </form>
       </div>

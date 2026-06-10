@@ -84,7 +84,7 @@ export default function ExportButton({ data, fileName, type, title }: ExportButt
     <div className="relative inline-block text-left">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+        className="flex items-center justify-center gap-2 rounded-xl border border-sky-600 bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -93,16 +93,16 @@ export default function ExportButton({ data, fileName, type, title }: ExportButt
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden py-1">
-          <button onClick={exportToExcel} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex justify-between items-center">
+        <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-xl">
+          <button onClick={exportToExcel} className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-50">
             <span>Microsoft Excel</span>
             <span className="text-[10px] bg-green-100 text-green-700 px-1 rounded font-bold">.XLSX</span>
           </button>
-          <button onClick={exportToCSV} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 flex justify-between items-center border-b border-gray-50">
+          <button onClick={exportToCSV} className="flex w-full items-center justify-between border-b border-slate-100 px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-50">
             <span>Data Mentah</span>
             <span className="text-[10px] bg-gray-100 text-gray-700 px-1 rounded font-bold">.CSV</span>
           </button>
-          <button onClick={exportToPDF} className="w-full text-left px-4 py-2 text-sm hover:bg-red-50 text-red-600 flex justify-between items-center">
+          <button onClick={exportToPDF} className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50">
             <span className="font-medium">Dokumen Siap Cetak</span>
             <span className="text-[10px] bg-red-100 text-red-700 px-1 rounded font-bold">.PDF</span>
           </button>

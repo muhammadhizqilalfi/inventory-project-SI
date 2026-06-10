@@ -17,12 +17,12 @@ export default function WarehouseSwitcher({ warehouses }: { warehouses: any[] })
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <label className="text-sm text-gray-500 font-medium">Lokasi Gudang:</label>
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+      <label className="text-sm font-medium text-slate-500">Lokasi Gudang</label>
       <select
         value={currentWarehouse}
         onChange={handleChange}
-        className="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 shadow-sm outline-none"
+        className="block rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
       >
         <option value="">Semua Gudang</option>
         {warehouses.map((w) => (

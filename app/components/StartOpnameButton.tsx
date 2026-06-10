@@ -13,7 +13,7 @@ export default function StartOpnameButton() {
         await createOpnameSession();
       }}
       disabled={loading}
-      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg disabled:opacity-50 transition-all"
+      className="rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700 disabled:opacity-50"
     >
       {loading ? "Menyiapkan..." : "+ Mulai Opname Baru"}
     </button>

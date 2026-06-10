@@ -14,19 +14,17 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Inisialisasi data item berdasarkan apa yang dipesan di PO
   const [formItems, setFormItems] = useState(
     po.items.map((item: any) => ({
       productId: item.productId,
       productName: item.product.name,
-      quantity: item.quantity - item.receivedQty, // Default: sisa yang belum diterima
+      quantity: item.quantity - item.receivedQty,
       qcStatus: "PASSED",
       locationId: "",
     })),
   );
 
   const handleProcessReceipt = async () => {
-    // Validasi: Lokasi harus dipilih untuk barang yang PASSED
     const invalidItem = formItems.find(
       (i: { qcStatus: string; locationId: any }) =>
         i.qcStatus === "PASSED" && !i.locationId,
@@ -39,7 +37,6 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
 
     setLoading(true);
     try {
-      // ✅ GANTI FETCH DENGAN PEMANGGILAN SERVER ACTION LANGSUNG
       const result = await processReceipt({
         poId: po.id,
         items: formItems.map((item: any) => ({
@@ -73,58 +70,53 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-blue-600 hover:underline font-medium"
+        className="rounded-lg px-2 py-1 text-xs font-semibold text-sky-700 transition hover:bg-sky-50"
       >
         Terima Barang
       </button>
 
-      {/* Backdrop & Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            {/* Header */}
-            <div className="p-6 border-b flex justify-between items-center bg-gray-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+            <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
               <div>
-                <h2 className="text-xl font-bold text-gray-800">
+                <h2 className="text-xl font-semibold text-slate-950">
                   Proses Penerimaan Barang
                 </h2>
-                <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">
+                <p className="mt-1 text-xs font-medium uppercase text-slate-400">
                   PO ID: {po.id.substring(0, 8)}
                 </p>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-black transition-colors text-2xl"
+                className="rounded-lg px-2 py-1 text-xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
               >
-                &times;
+                x
               </button>
             </div>
 
-            {/* Content Area */}
-            <div className="p-6 overflow-y-auto space-y-6">
+            <div className="space-y-4 overflow-y-auto p-6">
               {formItems.map((item: any, idx: number) => (
                 <div
                   key={idx}
-                  className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-xl bg-gray-50/50 items-end"
+                  className="grid grid-cols-1 items-end gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 md:grid-cols-4"
                 >
-                  {/* Info Produk */}
-                  <div className="md:col-span-1">
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">
+                  <div>
+                    <label className="mb-2 block text-xs font-semibold uppercase text-slate-400">
                       Nama Produk
                     </label>
-                    <p className="text-sm font-semibold text-gray-700 truncate">
+                    <p className="truncate text-sm font-semibold text-slate-800">
                       {item.productName}
                     </p>
                   </div>
 
-                  {/* Input Qty */}
                   <div>
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">
+                    <label className="mb-2 block text-xs font-semibold uppercase text-slate-400">
                       Jumlah Datang
                     </label>
                     <input
                       type="number"
-                      className="w-full p-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-500 outline-none"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
                       value={item.quantity}
                       onChange={(e) => {
                         const newItems = [...formItems];
@@ -134,15 +126,14 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
                     />
                   </div>
 
-                  {/* QC Status */}
                   <div>
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">
+                    <label className="mb-2 block text-xs font-semibold uppercase text-slate-400">
                       Status QC
                     </label>
                     <select
-                      className={`w-full p-2 text-sm border rounded-lg outline-none font-bold ${
+                      className={`w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100 ${
                         item.qcStatus === "PASSED"
-                          ? "text-green-600"
+                          ? "text-emerald-700"
                           : "text-red-600"
                       }`}
                       value={item.qcStatus}
@@ -158,14 +149,13 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
                     </select>
                   </div>
 
-                  {/* Lokasi Rak (Putaway) */}
                   <div>
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">
+                    <label className="mb-2 block text-xs font-semibold uppercase text-slate-400">
                       Lokasi Simpan
                     </label>
                     <select
                       disabled={item.qcStatus !== "PASSED"}
-                      className="w-full p-2 text-sm border rounded-lg outline-none disabled:bg-gray-200"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100 disabled:bg-slate-100 disabled:text-slate-400"
                       value={item.locationId}
                       onChange={(e) => {
                         const newItems = [...formItems];
@@ -185,18 +175,17 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
               ))}
             </div>
 
-            {/* Footer Aksi */}
-            <div className="p-6 border-t bg-gray-50 flex justify-end gap-4">
+            <div className="flex flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50 px-6 py-5 sm:flex-row sm:justify-end">
               <button
                 onClick={() => setIsOpen(false)}
-                className="px-6 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors"
+                className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
               >
                 Batal
               </button>
               <button
                 disabled={loading}
                 onClick={handleProcessReceipt}
-                className="px-8 py-2 bg-[#D32F2F] text-white rounded-xl font-bold text-sm shadow-lg shadow-red-100 hover:bg-red-700 active:scale-95 transition-all disabled:opacity-50"
+                className="rounded-xl bg-sky-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700 active:scale-[0.99] disabled:opacity-50"
               >
                 {loading ? "Memproses..." : "Konfirmasi Penerimaan"}
               </button>

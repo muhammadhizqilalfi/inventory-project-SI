@@ -6,6 +6,8 @@ import ProductActions from "@/app/components/ProductActions";
 import SearchBar from "@/app/components/SearchBar";
 import CategoryFilter from "@/app/components/CategoryFilter";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProductsPage(props: {
   searchParams: Promise<{ search?: string; category?: string }>; // Ubah tipe data menjadi Promise
 }) {
@@ -42,15 +44,19 @@ export default async function ProductsPage(props: {
   });
 
   return (
-    <div className="w-full p-6 space-y-6">
-      {/* ... (Header Section Tetap Sama) ... */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="w-full space-y-6">
+      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Master Data Produk</h1>
-          <p className="text-gray-500 text-sm">Kelola katalog barang dan klasifikasi kategori</p>
+          <p className="text-sm font-medium text-sky-700">Master Data</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
+            Katalog Barang
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Kelola SKU, kategori, barcode, dan batas minimum stok.
+          </p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <ExportButton 
             data={products} 
             fileName="Katalog_Produk" 
@@ -61,26 +67,25 @@ export default async function ProductsPage(props: {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-xs text-gray-400 uppercase font-bold">Total SKU</p>
-          <p className="text-2xl font-bold text-gray-800">{products.length}</p>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase text-slate-400">Total SKU</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-950">{products.length}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-xs text-gray-400 uppercase font-bold">Total Kategori</p>
-          <p className="text-2xl font-bold text-blue-600">{categories.length}</p>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase text-slate-400">Total Kategori</p>
+          <p className="mt-2 text-3xl font-semibold text-sky-700">{categories.length}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-xs text-gray-400 uppercase font-bold">Low Stock Alert</p>
-          <p className="text-2xl font-bold text-red-500">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase text-slate-400">Low Stock Alert</p>
+          <p className="mt-2 text-3xl font-semibold text-red-600">
             {lowStockProducts.length}
           </p>
         </div>
       </div>
 
-      {/* Table Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-100 flex flex-col md:flex-row gap-4 justify-between bg-gray-50/50">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex flex-col gap-3 border-b border-slate-100 bg-slate-50/70 p-4 md:flex-row md:items-center md:justify-between">
            
            <SearchBar />
 
@@ -89,13 +94,13 @@ export default async function ProductsPage(props: {
 
         <div className="overflow-x-auto">
           {products.length === 0 ? (
-            <div className="p-12 text-center text-gray-500">
-              Produk dengan kata kunci <span className="font-bold">"{query}"</span> tidak ditemukan.
+            <div className="p-12 text-center text-slate-500">
+              Produk dengan kata kunci <span className="font-semibold text-slate-800">"{query}"</span> tidak ditemukan.
             </div>
           ) : (
-            <table className="w-full text-left">
+            <table className="w-full min-w-[820px] text-left">
               <thead>
-                <tr className="bg-white border-b text-xs uppercase text-gray-400">
+                <tr className="border-b border-slate-100 bg-white text-xs uppercase text-slate-500">
                   <th className="px-6 py-4 font-semibold">Informasi Produk</th>
                   <th className="px-6 py-4 font-semibold">Kategori</th>
                   <th className="px-6 py-4 font-semibold">Unit</th>
@@ -104,28 +109,28 @@ export default async function ProductsPage(props: {
                   <th className="px-6 py-4 font-semibold text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-sm">
+              <tbody className="divide-y divide-slate-100 text-sm">
                 {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={product.id} className="transition-colors hover:bg-sky-50/40">
                     <td className="px-6 py-4">
-                      <p className="font-bold text-gray-800">{product.name}</p>
-                      <p className="text-[10px] text-gray-400 font-mono">{product.barcode || "Tanpa Barcode"}</p>
+                      <p className="font-semibold text-slate-900">{product.name}</p>
+                      <p className="mt-1 text-[11px] font-medium text-slate-400">{product.barcode || "Tanpa Barcode"}</p>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">
-                       <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">
+                    <td className="px-6 py-4 text-slate-600">
+                       <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-700 ring-1 ring-sky-100">
                         {product.category.name}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{product.unit}</td>
-                    <td className="px-6 py-4 text-center font-semibold text-orange-600">{product.minStock}</td>
+                    <td className="px-6 py-4 text-slate-600">{product.unit}</td>
+                    <td className="px-6 py-4 text-center font-semibold text-amber-700">{product.minStock}</td>
                     <td className="px-6 py-4">
                       {product.batches.length > 0 ? (
-                        <span className="flex items-center gap-1 text-green-600 font-medium">
-                          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span className="flex items-center gap-2 font-medium text-emerald-700">
+                          <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
                           Active
                         </span>
                       ) : (
-                        <span className="text-gray-400 italic">Static</span>
+                        <span className="text-slate-400">Static</span>
                       )}
                     </td>
                     <td className="px-6 py-4 text-right">
