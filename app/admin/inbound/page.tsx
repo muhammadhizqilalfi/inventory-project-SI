@@ -1,8 +1,17 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import POForm from "@/app/components/POForm";
 import ReceiptModal from "@/app/components/ReceiptModal";
 
 export const dynamic = "force-dynamic";
+
+type PurchaseOrderWithRelations = Prisma.PurchaseOrderGetPayload<{
+  include: {
+    supplier: true;
+    items: { include: { product: true } };
+    _count: { select: { items: true } };
+  };
+}>;
 
 export default async function InboundPage() {
   const suppliers = await prisma.supplier.findMany();
@@ -19,7 +28,7 @@ export default async function InboundPage() {
       _count: { select: { items: true } } 
     },
     orderBy: { date: 'desc' }
-  });
+  }) as PurchaseOrderWithRelations[];
 
   return (
     <div className="space-y-6">
@@ -57,7 +66,7 @@ export default async function InboundPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {poList.map((po) => (
+              {poList.map((po: PurchaseOrderWithRelations) => (
                 <tr key={po.id} className="text-slate-600 transition-colors hover:bg-sky-50/40">
                   <td className="px-6 py-4 text-xs font-medium">{po.id.substring(0, 8)}</td>
                   <td className="px-6 py-4 font-medium text-slate-800">{po.supplier.name}</td>

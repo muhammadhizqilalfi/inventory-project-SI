@@ -13,7 +13,7 @@ export async function createOpnameSession() {
         data: { status: "PENDING" },
       });
 
-      const opnameItems = currentInventory.map((inv) => ({
+      const opnameItems = currentInventory.map((inv: { id: any; quantity: any; }) => ({
         stockOpnameId: opname.id,
         inventoryId: inv.id,
         systemQty: inv.quantity,
