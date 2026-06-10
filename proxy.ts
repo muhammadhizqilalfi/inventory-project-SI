@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-export async function middleware(req: any) {
+export async function proxy(req: any) {
   const token = req.cookies.get("token")?.value;
 
   if (!token) {

@@ -1,7 +1,8 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { QCStatus } from "@prisma/client";
+
+type QCStatus = "PASSED" | "FAILED";
 
 export async function createPO(data: {
   supplierId: string;

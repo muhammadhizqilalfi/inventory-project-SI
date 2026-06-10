@@ -15,7 +15,7 @@ const globalForPrisma = global as unknown as {
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
-    adapter, // 🔥 ini kunci di Prisma v7
+    adapter,
   });
 
 if (process.env.NODE_ENV !== "production") {
