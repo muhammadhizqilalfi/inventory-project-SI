@@ -38,7 +38,6 @@ const menu = [
     items: [
       { name: "Stock On Hand", href: "/admin/inventory", icon: Boxes },
       { name: "Stock Transfer", href: "/admin/transfer", icon: Repeat2 },
-      { name: "Stock Opname", href: "/admin/opname", icon: ClipboardList },
     ],
   },
   {
@@ -49,9 +48,8 @@ const menu = [
     ],
   },
   {
-    title: "Reports & System",
+    title: "System",
     items: [
-      { name: "Stock Movement", href: "/admin/reports/movement", icon: Package },
       { name: "User Management", href: "/admin/users", icon: Users },
     ],
   },
