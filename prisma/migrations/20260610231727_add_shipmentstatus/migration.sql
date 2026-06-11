@@ -1,0 +1,2 @@
+-- CreateEnum
+CREATE TYPE "ShipmentStatus" AS ENUM ('READY_TO_SHIP', 'SHIPPED', 'DELIVERY', 'CANCELLED');
