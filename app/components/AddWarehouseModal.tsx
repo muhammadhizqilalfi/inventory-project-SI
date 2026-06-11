@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createWarehouse } from "@/app/admin/warehouses/actions";
+import { createWarehouse } from "@/app/users/warehouses/actions";
 
 export default function AddWarehouseButton() {
   const [isOpen, setIsOpen] = useState(false);

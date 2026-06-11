@@ -16,7 +16,7 @@ export async function createSupplier(formData: FormData) {
     await prisma.supplier.create({
       data: { name, contact, address },
     });
-    revalidatePath("/admin/suppliers");
+    revalidatePath("/users/suppliers");
     return { success: true };
   } catch (error) {
     return { error: "Gagal menambah supplier" };
@@ -33,7 +33,7 @@ export async function updateSupplier(id: string, formData: FormData) {
       where: { id },
       data: { name, contact, address },
     });
-    revalidatePath("/admin/suppliers");
+    revalidatePath("/users/suppliers");
     return { success: true };
   } catch (error) {
     return { error: "Gagal update supplier" };
@@ -47,7 +47,7 @@ export async function deleteSupplier(id: string) {
     if (hasOrders) return { error: "Supplier tidak bisa dihapus karena memiliki riwayat PO!" };
 
     await prisma.supplier.delete({ where: { id } });
-    revalidatePath("/admin/suppliers");
+    revalidatePath("/users/suppliers");
     return { success: true };
   } catch (error) {
     return { error: "Gagal menghapus supplier" };

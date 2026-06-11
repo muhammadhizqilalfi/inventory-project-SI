@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { addCategory } from "@/app/admin/products/category-action";
+import { addCategory } from "@/app/users/products/category-action";
 
 export default function AddCategoryModal() {
   const [isOpen, setIsOpen] = useState(false);

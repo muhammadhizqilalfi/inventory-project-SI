@@ -109,7 +109,7 @@ export default async function WarehousePage() {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <Link
-                            href={`/admin/warehouses/location/${loc.id}`}
+                            href={`/users/warehouses/location/${loc.id}`}
                             className="rounded-lg px-2 py-1 text-xs font-semibold text-sky-700 transition hover:bg-sky-50"
                           >
                             Detail Stok

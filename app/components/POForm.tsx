@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createPO } from "@/app/admin/inbound/actions";
+import { createPO } from "@/app/users/inbound/actions";
 
 export default function POForm({ suppliers, products }: any) {
   const [supplierId, setSupplierId] = useState("");

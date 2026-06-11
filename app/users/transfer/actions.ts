@@ -91,7 +91,7 @@ export async function createStockTransfer(data: {
         });
       }
 
-      revalidatePath("/admin/inventory");
+      revalidatePath("/users/inventory");
       return { success: true, error: null };
     });
   } catch (error: any) {

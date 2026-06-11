@@ -19,7 +19,7 @@ export default async function RedirectPage() {
   }
 
   if (decoded.role === "ADMIN") {
-    redirect("/admin");
+    redirect("/users");
   } else {
     redirect("/user");
   }

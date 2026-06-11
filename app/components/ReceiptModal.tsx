@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { processReceipt } from "@/app/admin/inbound/actions";
+import { processReceipt } from "@/app/users/inbound/actions";
 
 interface ReceiptModalProps {
   po: any;
@@ -21,6 +21,8 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
       quantity: item.quantity - item.receivedQty,
       qcStatus: "PASSED",
       locationId: "",
+      batchNumber: "",
+      expiryDate: "",
     })),
   );
 
@@ -44,6 +46,8 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
           quantity: item.quantity,
           qcStatus: item.qcStatus,
           locationId: item.locationId,
+          batchNumber: item.batchNumber,
+          expiryDate: item.expiryDate,
         })),
       });
 
@@ -112,15 +116,61 @@ export default function ReceiptModal({ po, locations }: ReceiptModalProps) {
 
                   <div>
                     <label className="mb-2 block text-xs font-semibold uppercase text-slate-400">
-                      Jumlah Datang
+                      Qty PO
                     </label>
+
+                    <input
+                      disabled
+                      value={po.items[idx].quantity}
+                      className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-xs font-semibold uppercase text-slate-400">
+                      Belum Diterima
+                    </label>
+
+                    <input
+                      disabled
+                      value={po.items[idx].quantity - po.items[idx].receivedQty}
+                      className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-xs font-semibold uppercase text-slate-400">
+                      Jumlah Masuk
+                    </label>
+
                     <input
                       type="number"
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100"
+                      max={po.items[idx].quantity - po.items[idx].receivedQty}
                       value={item.quantity}
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm"
+                      onChange={(e) => {
+                        const qty = parseInt(e.target.value) || 0;
+
+                        const maxQty =
+                          po.items[idx].quantity - po.items[idx].receivedQty;
+
+                        const newItems = [...formItems];
+
+                        newItems[idx].quantity = qty > maxQty ? maxQty : qty;
+
+                        setFormItems(newItems);
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label>Expired Date</label>
+                    <input
+                      type="date"
+                      value={item.expiryDate || ""}
                       onChange={(e) => {
                         const newItems = [...formItems];
-                        newItems[idx].quantity = parseInt(e.target.value) || 0;
+                        newItems[idx].expiryDate = e.target.value;
                         setFormItems(newItems);
                       }}
                     />

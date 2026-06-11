@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { addProduct } from "@/app/admin/products/actions";
+import { addProduct } from "@/app/users/products/actions";
 
 export default function AddProductModal({ categories }: { categories: any[] }) {
   const [isOpen, setIsOpen] = useState(false);

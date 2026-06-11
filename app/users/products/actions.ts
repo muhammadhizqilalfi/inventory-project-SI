@@ -19,7 +19,7 @@ export async function addProduct(formData: FormData) {
     },
   });
 
-  revalidatePath("/admin/products"); // Refresh data di halaman tabel
+  revalidatePath("/users/products"); // Refresh data di halaman tabel
 }
 
 export async function updateProduct(id: string, formData: FormData) {
@@ -39,12 +39,12 @@ export async function updateProduct(id: string, formData: FormData) {
       minStock,
     },
   });
-  revalidatePath("/admin/products");
+  revalidatePath("/users/products");
 }
 
 export async function deleteProduct(id: string) {
   await prisma.product.delete({
     where: { id },
   });
-  revalidatePath("/admin/products");
+  revalidatePath("/users/products");
 }

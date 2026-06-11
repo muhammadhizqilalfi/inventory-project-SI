@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { updateSupplier, deleteSupplier } from "@/app/admin/suppliers/actions";
+import { updateSupplier, deleteSupplier } from "@/app/users/suppliers/actions";
 
 interface Supplier {
   id: string;

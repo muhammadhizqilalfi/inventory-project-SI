@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { updateProduct } from "@/app/admin/products/actions";
+import { updateProduct } from "@/app/users/products/actions";
 
 export default function EditProductModal({
   product,

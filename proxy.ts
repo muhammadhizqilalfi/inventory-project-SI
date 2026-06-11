@@ -15,7 +15,7 @@ export async function proxy(req: any) {
     );
 
     // contoh proteksi admin
-    if (req.nextUrl.pathname.startsWith("/admin")) {
+    if (req.nextUrl.pathname.startsWith("/users")) {
       if (payload.role !== "ADMIN") {
         return NextResponse.redirect(new URL("/", req.url));
       }
@@ -28,5 +28,5 @@ export async function proxy(req: any) {
 }
 
 export const config = {
-  matcher: ["/user/:path*","/admin/:path*"],
+  matcher: ["/user/:path*","/users/:path*"],
 };
