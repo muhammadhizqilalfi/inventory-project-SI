@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import SalesOrderForm from "@/app/components/SalesOrderForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function CreateOutboundPage() {
   const products = await prisma.product.findMany({
     orderBy: {

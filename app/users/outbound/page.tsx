@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import OutboundActions from "@/app/components/OutboundActions";
 import { deleteSalesOrder } from "./actions";
 
+export const dynamic = "force-dynamic";
+
 export default async function OutboundPage() {
   const orders = await prisma.salesOrder.findMany({
     include: {

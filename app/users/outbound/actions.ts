@@ -350,13 +350,11 @@ export async function shipOrder(salesOrderId: string, trackingNo: string) {
 export async function createShipment(
   salesOrderId: string,
   trackingNo: string,
-  courier: string,
 ) {
   const shipment = await prisma.shipment.create({
     data: {
       salesOrderId,
       trackingNo,
-      courier,
       status: "SHIPPED",
       shippedAt: new Date(),
     },
