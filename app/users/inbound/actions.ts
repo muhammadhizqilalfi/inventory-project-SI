@@ -1,8 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-
-type QCStatus = "PASSED" | "FAILED";
+import { QCStatus, OrderStatus } from "@prisma/client";
 
 export async function createPO(data: {
   supplierId: string;
@@ -12,7 +11,7 @@ export async function createPO(data: {
     const po = await prisma.purchaseOrder.create({
       data: {
         supplierId: data.supplierId,
-        status: "PENDING",
+        status: OrderStatus.PENDING,
         items: {
           create: data.items.map((item) => ({
             productId: item.productId,
@@ -36,16 +35,25 @@ export async function processReceipt(data: {
     quantity: number;
     qcStatus: QCStatus;
     locationId: string;
-    batchId?: string | null;
+    batchNumber?: string;
+    expiryDate?: Date;
   }[];
 }) {
   try {
     return await prisma.$transaction(async (tx) => {
+      const hasFailed = data.items.some(
+        (item) => item.qcStatus === QCStatus.FAILED,
+      );
+
+      const hasInspection = data.items.some(
+        (item) => item.qcStatus === QCStatus.NEEDS_INSPECTION,
+      );
+
       // 1. Buat Header Penerimaan
       const receipt = await tx.goodsReceipt.create({
         data: {
           poId: data.poId,
-          status: "COMPLETED",
+          status: hasInspection ? "PENDING" : "COMPLETED",
           items: {
             create: data.items.map((item) => ({
               productId: item.productId,
@@ -57,16 +65,41 @@ export async function processReceipt(data: {
       });
 
       for (const item of data.items) {
-        // 2. Update receivedQty di PO
-        await tx.purchaseOrderItem.updateMany({
-          where: { purchaseOrderId: data.poId, productId: item.productId },
-          data: { receivedQty: { increment: item.quantity } },
-        });
-
-        // 3. JIKA Lolos QC (PASSED), masukkan ke Inventory
         if (item.qcStatus === "PASSED") {
-          // Ganti string kosong atau undefined menjadi null agar konsisten di DB
-          const finalBatchId = item.batchId || null;
+          await tx.purchaseOrderItem.updateMany({
+            where: {
+              purchaseOrderId: data.poId,
+              productId: item.productId,
+            },
+            data: {
+              receivedQty: {
+                increment: item.quantity,
+              },
+            },
+          });
+
+          const now = new Date();
+
+          const datePart =
+            String(now.getDate()).padStart(2, "0") +
+            String(now.getMonth() + 1).padStart(2, "0") +
+            String(now.getFullYear()).slice(-2);
+
+          const randomId = crypto.randomUUID().slice(0, 4).toUpperCase();
+
+          const batchNumber = `${datePart}-${randomId}`;
+
+          let finalBatchId: string | null = null;
+
+          const batch = await tx.batch.create({
+            data: {
+              productId: item.productId,
+              batchNumber,
+              expiryDate: item.expiryDate ? new Date(item.expiryDate) : null,
+            },
+          });
+
+          finalBatchId = batch.id;
 
           const existingInventory = await tx.inventory.findFirst({
             where: {
@@ -77,13 +110,17 @@ export async function processReceipt(data: {
           });
 
           if (existingInventory) {
-            // 2. Jika ada, update quantity-nya
             await tx.inventory.update({
-              where: { id: existingInventory.id },
-              data: { quantity: { increment: item.quantity } },
+              where: {
+                id: existingInventory.id,
+              },
+              data: {
+                quantity: {
+                  increment: item.quantity,
+                },
+              },
             });
           } else {
-            // 3. Jika tidak ada, buat data baru
             await tx.inventory.create({
               data: {
                 productId: item.productId,
@@ -94,7 +131,6 @@ export async function processReceipt(data: {
             });
           }
 
-          // 4. Catat Stock Movement (tetap sama)
           await tx.stockMovement.create({
             data: {
               productId: item.productId,
@@ -106,6 +142,42 @@ export async function processReceipt(data: {
           });
         }
       }
+
+      // Ambil semua item PO terbaru
+      const poItems = await tx.purchaseOrderItem.findMany({
+        where: {
+          purchaseOrderId: data.poId,
+        },
+      });
+
+      // Hitung status PO
+      const totalItems = poItems.length;
+
+      const completedItems = poItems.filter(
+        (item) => item.receivedQty >= item.quantity,
+      ).length;
+
+      let status: OrderStatus = OrderStatus.PENDING;
+
+      if (hasFailed) {
+        status = OrderStatus.REJECTED;
+      } else if (hasInspection) {
+        status = OrderStatus.INSPECTION;
+      } else if (completedItems === totalItems) {
+        status = OrderStatus.COMPLETED;
+      } else if (poItems.some((item) => item.receivedQty > 0)) {
+        status = OrderStatus.PARTIAL;
+      }
+
+      // Update status PO
+      await tx.purchaseOrder.update({
+        where: {
+          id: data.poId,
+        },
+        data: {
+          status,
+        },
+      });
 
       return { success: true, error: null };
     });

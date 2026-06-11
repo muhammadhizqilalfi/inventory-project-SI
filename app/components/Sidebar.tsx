@@ -23,34 +23,34 @@ import {
 const menu = [
   {
     title: "Overview",
-    items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
+    items: [{ name: "Dashboard", href: "/users", icon: LayoutDashboard }],
   },
   {
     title: "Master Data",
     items: [
-      { name: "Produk & Kategori", href: "/admin/products", icon: Tags },
-      { name: "Gudang & Lokasi", href: "/admin/warehouses", icon: Warehouse },
-      { name: "Supplier", href: "/admin/suppliers", icon: Handshake },
+      { name: "Produk & Kategori", href: "/users/products", icon: Tags },
+      { name: "Gudang & Lokasi", href: "/users/warehouses", icon: Warehouse },
+      { name: "Supplier", href: "/users/suppliers", icon: Handshake },
     ],
   },
   {
     title: "Inventory Management",
     items: [
-      { name: "Stock On Hand", href: "/admin/inventory", icon: Boxes },
-      { name: "Stock Transfer", href: "/admin/transfer", icon: Repeat2 },
+      { name: "Stock On Hand", href: "/users/inventory", icon: Boxes },
+      { name: "Stock Transfer", href: "/users/transfer", icon: Repeat2 },
     ],
   },
   {
     title: "Logistics",
     items: [
-      { name: "Inbound", href: "/admin/inbound", icon: ArrowDownToLine },
-      { name: "Outbound", href: "/admin/outbound", icon: ArrowUpFromLine },
+      { name: "Inbound", href: "/users/inbound", icon: ArrowDownToLine },
+      { name: "Outbound", href: "/users/outbound", icon: ArrowUpFromLine },
     ],
   },
   {
     title: "System",
     items: [
-      { name: "User Management", href: "/admin/users", icon: Users },
+      { name: "User Management", href: "/users/usermanage", icon: Users },
     ],
   },
 ];

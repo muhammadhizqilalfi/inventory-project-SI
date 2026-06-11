@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createSupplier } from "@/app/admin/suppliers/actions";
+import { createSupplier } from "@/app/users/suppliers/actions";
 
 export default function AddSupplierModal() {
   const [isOpen, setIsOpen] = useState(false);

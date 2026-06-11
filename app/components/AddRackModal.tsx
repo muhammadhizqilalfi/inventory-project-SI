@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createLocation } from "@/app/admin/warehouses/actions";
+import { createLocation } from "@/app/users/warehouses/actions";
 
 export default function AddRackButton({
   warehouseId,

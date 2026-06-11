@@ -11,5 +11,5 @@ export async function addCategory(formData: FormData) {
     data: { name },
   });
 
-  revalidatePath("/admin/products");
+  revalidatePath("/users/products");
 }

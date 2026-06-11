@@ -34,7 +34,7 @@ export default async function LocationDetailPage({
   return (
     <div className="w-full space-y-6">
       <nav className="flex gap-2 text-sm text-slate-500">
-        <Link href="/admin/warehouses" className="hover:text-sky-700">
+        <Link href="/users/warehouses" className="hover:text-sky-700">
           Gudang
         </Link>
         <span>/</span>

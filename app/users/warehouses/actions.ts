@@ -15,7 +15,7 @@ export async function createWarehouse(formData: FormData) {
     });
 
     // Refresh halaman agar data terbaru muncul
-    revalidatePath("/admin/warehouses");
+    revalidatePath("/users/warehouses");
     return { success: true };
   } catch (error) {
     return { error: "Gagal menyimpan ke database" };
@@ -37,7 +37,7 @@ export async function createLocation(formData: FormData) {
         bin,
       },
     });
-    revalidatePath("/admin/warehouses");
+    revalidatePath("/users/warehouses");
     return { success: true };
   } catch (error) {
     return { error: "Gagal menambah lokasi rak" };
